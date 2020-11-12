@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link to="/">Go back to home</router-link>
     <p>{{ warehouse.id }}</p>
     <p>{{ warehouse.name }}</p>
   </div>
