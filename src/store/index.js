@@ -1,20 +1,25 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import { INIT_WAREHOUSES, EDIT_WAREHOUSE } from './mutation-types'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    warehouses: [],
-    warehousesMetas: [],
+    warehouses: new Array(),
+    warehousesMetas: new Array(),
   },
   mutations: {
-    setWarehouses(state, newWarehouses) {
-      state.warehouses = newWarehouses
+    [INIT_WAREHOUSES](state, initialWarehouses) {
+      state.warehouses = initialWarehouses
     },
-    setWarehousesMeta(state, newWarehousesMeta) {
-      state.warehousesMetas = newWarehousesMeta
-    }
+    [EDIT_WAREHOUSE](state, { warehouseId, newWarehouseData }) {
+      let warehouse = state.warehouses.find(warehouse => warehouse.id == warehouseId)
+      for (const key in newWarehouseData) {
+        warehouse[key] = newWarehouseData[key]
+      }
+    },
   },
   actions: {
   },
