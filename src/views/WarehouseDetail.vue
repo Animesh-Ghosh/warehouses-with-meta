@@ -14,7 +14,10 @@
       @click="showEditForm = true">
       Edit Warehouse
     </button>
-    <form v-if="showEditForm" @submit.prevent="onSubmit" @reset.prevent="onReset">
+    <form v-if="showEditForm"
+      id="edit-warehouse-form"
+      @submit.prevent="onSubmit"
+      @reset.prevent="onReset">
       <div>
         <label for="warehouse-cluster">Cluster:</label>
         <select v-model="newWarehouseData.cluster"
@@ -63,19 +66,45 @@
           name="warehouse-is-live"/>
       </div>
       <div>
-        <input type="reset" name="reset-form" value="Cancel Edit">
+        <input type="reset" name="reset-form" value="Cancel Edit"/>
         <input type="submit" name="edit-warehouse" value="Edit Warehouse"/>
       </div>
     </form>
     <hr/>
-    <button @click="addMeta">Add Custom Fields</button>
+    <div v-if="!showMetaAddForm">
+      <button @click="showMetaAddForm = true">Add Custom Fields</button>
+      <ul v-if="warehouseCustomFields.length">
+        <li v-for="customField of warehouseCustomFields"
+          :key="customField.id">
+          <p>{{ customField.key }}: {{ customField.value }}</p>
+        </li>
+      </ul>
+      <p v-else>No custom fields!</p>
+    </div>
+    <form v-else
+      id="add-warehouse-meta-form"
+      @submit.prevent="onSubmitMeta"
+      @reset.prevent="onResetMeta">
+      <label for="meta-key">Key:</label>
+      <input v-model="warehouseMeta.key"
+        id="meta-key"
+        type="text"
+        name="meta-key"/>
+      <label for="meta-value">Value:</label>
+      <input v-model="warehouseMeta.value"
+        id="meta-value"
+        type="text"
+        name="meta-value"/>
+      <input type="reset" name="reset" value="Cancel"/>
+      <input type="submit" name="add-field" value="Add Field"/>
+    </form>
   </div>
 </template>
 
 <script>
 import { cities, clusters } from '@/App.vue'
 import { mapState, mapMutations } from 'vuex'
-import { EDIT_WAREHOUSE } from '@/store/mutation-types'
+import { EDIT_WAREHOUSE, SET_WAREHOUSE_META } from '@/store/mutation-types'
 
 export default {
   name: 'WarehouseDetail',
@@ -90,7 +119,13 @@ export default {
         city: '',
         space_available: '',
         is_live: false,
+      },
+      showMetaAddForm: false,
+      warehouseMeta: {
+        key: '',
+        value: '',
       }
+
     }
   },
   created() {
@@ -120,11 +155,20 @@ export default {
       this.newWarehouseData.space_available = this.warehouse.space_available
       this.newWarehouseData.is_live = this.warehouse.is_live
     },
-    addMeta() {
-      console.log('Meta values will be added from here!')
+    onSubmitMeta() {
+      this.showMetaAddForm = false
+
+      console.log(this.warehouseMeta)
+      this.addWarehouseMeta({ warehouseId: this.warehouse.id, warehouseMeta: this.warehouseMeta })
+      this.onResetMeta()
+    },
+    onResetMeta() {
+      this.showMetaAddForm = false
+      this.warehouseMeta.key = this.warehouseMeta.value = ''
     },
     ...mapMutations({
       editWarehouseData: EDIT_WAREHOUSE,
+      addWarehouseMeta: SET_WAREHOUSE_META,
     })
   },
   computed: {
@@ -132,6 +176,9 @@ export default {
       warehouse(state) {
         return state.warehouses.find(warehouse => warehouse.id == this.$route.params.id)
       },
+      warehouseCustomFields(state) {
+        return state.warehousesMetas.filter(warehouseMeta => warehouseMeta.warehouseId == this.$route.params.id)
+      }
     })
   },
 }

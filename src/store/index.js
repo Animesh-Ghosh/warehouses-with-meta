@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { INIT_WAREHOUSES, EDIT_WAREHOUSE } from './mutation-types'
+import { INIT_WAREHOUSES, EDIT_WAREHOUSE, SET_WAREHOUSE_META } from './mutation-types'
 
 Vue.use(Vuex)
 
@@ -20,6 +20,14 @@ export default new Vuex.Store({
         warehouse[key] = newWarehouseData[key]
       }
     },
+    [SET_WAREHOUSE_META](state, { warehouseId, warehouseMeta }) {
+      state.warehousesMetas.push({
+        id: state.warehousesMetas.length + 1,
+        warehouseId,
+        key: warehouseMeta.key,
+        value: warehouseMeta.value,
+      })
+    }
   },
   actions: {
   },

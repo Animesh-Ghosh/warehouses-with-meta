@@ -48,7 +48,19 @@
         id="max-warehouse-space-limit"
         type="number"
         name="max-warehouse-space-limit"/>
-      <button @click="minSpaceLimit = maxSpaceLimit = ''">Clear Space Limits</button>
+      <button @click="(() => {
+          minSpaceLimit = 0
+          maxSpaceLimit = Infinity
+        })">Clear Space Limits</button>
+    </div>
+    <div>
+      <label for="warehouse-is-live">Filter by Status:</label>
+      <select v-model="isLive">
+        <option value="" disabled="">Is Live</option>
+        <option :value="true">Yes</option>
+        <option :value="false">No</option>
+      </select>
+      <button @click="isLive = ''">Clear Status</button>
     </div>
     <table>
       <thead>
@@ -97,8 +109,9 @@ export default {
       warehouseClusters: clusters,
       selectedCity: '',
       selectedCluster: '',
-      minSpaceLimit: '',
-      maxSpaceLimit: '',
+      minSpaceLimit: 0,
+      maxSpaceLimit: Infinity,
+      isLive: '',
     }
   },
   created() {
@@ -123,7 +136,12 @@ export default {
         warehouses = this.selectedCluster ? warehouses.filter(warehouse => warehouse.cluster == this.selectedCluster) : warehouses
 
         // filter by space limit
-        warehouses = this.minSpaceLimit && this.maxSpaceLimit ? warehouses.filter(warehouse => this.minSpaceLimit <= warehouse.space_available && warehouse.space_available <= this.maxSpaceLimit) : warehouses
+        warehouses = warehouses.filter(warehouse => this.minSpaceLimit <= warehouse.space_available)
+        warehouses = warehouses.filter(warehouse => warehouse.space_available <= this.maxSpaceLimit)
+
+        // filter by status
+        if (typeof this.isLive == 'boolean')
+          warehouses = warehouses.filter(warehouse => this.isLive == warehouse.is_live)
 
         return warehouses
       }
