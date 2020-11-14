@@ -18,19 +18,8 @@
       id="edit-warehouse-form"
       @submit.prevent="onSubmit"
       @reset.prevent="onReset">
-      <div>
-        <label for="warehouse-cluster">Cluster:</label>
-        <select v-model="newWarehouseData.cluster"
-          id="warehouse-cluster"
-          name="warehouse-cluster">
-          <option v-for="cluster of warehouseClusters"
-            :key="cluster.value"
-            :value="cluster.value"
-            :disabled="cluster.disabled">
-            {{ cluster.label }}
-          </option>
-        </select>
-      </div>
+      <WarehouseClustersDropdown v-model="newWarehouseData.cluster"
+        label="Cluster"/>
       <div>
         <label for="warehouse-name">Name:</label>
         <input v-model="newWarehouseData.name"
@@ -38,19 +27,8 @@
           type="text"
           name="warehouse-name"/>
       </div>
-      <div>
-        <label for="warehouse-city">City:</label>
-        <select v-model="newWarehouseData.city"
-          id="warehouse-city"
-          name="warehouse-city">
-          <option v-for="city of warehouseCities"
-            :key="city.value"
-            :value="city.value"
-            :disabled="city.disabled">
-            {{ city.label }}
-          </option>
-        </select>
-      </div>
+      <WarehouseCitiesDropdown v-model="newWarehouseData.city"
+        label="City"/>
       <div>
         <label for="warehouse-space-available">Space available:</label>
         <input v-model.number="newWarehouseData.space_available"
@@ -105,9 +83,15 @@
 import { cities, clusters } from '@/App.vue'
 import { mapState, mapMutations } from 'vuex'
 import { EDIT_WAREHOUSE, SET_WAREHOUSE_META } from '@/store/mutation-types'
+import WarehouseClustersDropdown from '@/components/WarehouseClustersDropdown.vue'
+import WarehouseCitiesDropdown from '@/components/WarehouseCitiesDropdown.vue'
 
 export default {
   name: 'WarehouseDetail',
+  components: {
+    WarehouseClustersDropdown,
+    WarehouseCitiesDropdown,
+  },
   data () {
     return {
       showEditForm: false,

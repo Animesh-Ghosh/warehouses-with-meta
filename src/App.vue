@@ -12,17 +12,9 @@ import { mapMutations } from 'vuex'
 import { INIT_WAREHOUSES } from '@/store/mutation-types'
 
 // setup dropdowns for filters
-export const cities = [
-  { value: '', label: 'Select City', disabled: true }
-]
+export const cities = new Array()
 
-export const clusters = [
-  { value: '', label: 'Select Cluster', disabled: true }
-]
-
-export const spaceLimits = [
-  { value: '', label: 'Select Space Limit', disabled: true }
-]
+export const clusters = new Array()
 
 export default {
   name: 'App',
@@ -35,7 +27,6 @@ export default {
         cities.push({
           value: warehouse.city,
           label: warehouse.city,
-          disabled: false,
         })
       }
 
@@ -43,7 +34,6 @@ export default {
         clusters.push({
           value: warehouse.cluster,
           label: warehouse.cluster,
-          disabled: false,
         })
       }
     }
@@ -66,30 +56,43 @@ export default {
 }
 
 @font-face {
-  font-family: Montserrat;
+  font-family: 'Montserrat Bold';
+  src: url('./assets/fonts/Montserrat-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat Regular';
   src: url('./assets/fonts/Montserrat-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Montserrat Medium';
+  src: url('./assets/fonts/Montserrat-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat SemiBold';
+  src: url('./assets/fonts/Montserrat-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  font-family: Montserrat, sans-serif;
+  --mon-b: 'Montserrat Bold';
+  --mon: 'Montserrat Regular';
+  --mon-m: 'Montserrat Medium';
+  --mon-sb: 'Montserrat SemiBold';
+  font-family: var(--mon), sans-serif;
   font-size: 16px;
-}
-
-h1 {
-  font-family: Montserrat;
-  font-weight: 700;
-}
-
-a {
-  text-decoration: none;
-  color: #000;
-  transition: color 200ms ease-in-out;
-
-  &:hover {
-    color: #ED3232;
-  }
 }
 </style>
